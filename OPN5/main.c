@@ -18,7 +18,7 @@ void GenerateString(char *string, int length);
 void Sort(char **addresses,int num);
 
 int main(void) {
-    char cont,end;
+    char cont;
     srand(time(NULL));
 
     int linesCount;
@@ -27,7 +27,6 @@ int main(void) {
     do{
         do{
             printf("Program for sorting lines of symbols\n");
-
             do {
                 printf("Enter number of lines --> (%d to %d)\n", MIN_LINES_COUNT, MAX_LINES_COUNT);
                 linesCount = ValueValidation();
@@ -45,16 +44,27 @@ int main(void) {
                 GenerateString(list[i], symbCount);
                 addr[i] = list[i];
             }
-
-            for (int i = 0; i < linesCount; i++) {
-                printf("%s\n",addr[i]);
-            }
             
-            Sort(addr,linesCount);
-            printf("\n");
+            if (linesCount == MIN_LINES_COUNT) {
+                printf("%s\n", addr[0]);
+                printf("Only one line in array, nothing to sort\n");
 
-            for (int i = 0; i < linesCount; i++) {
-                printf("%s\n",addr[i]);
+            }
+            else {
+
+                for (int i = 0; i < linesCount; i++) {
+                    printf("%s\n",addr[i]);
+                }
+                printf("\n");
+
+                Sort(addr,linesCount);
+                printf("Sorted lines\n");
+
+                printf("\n");
+
+                for (int i = 0; i < linesCount; i++) {
+                    printf("%s\n",addr[i]);
+                }
             }
 
             printf("\n");
@@ -94,6 +104,7 @@ int IsInvalidByLimit(int value, int bottomLimit, int topLimit, char lastSymbol) 
         CleanBuffer();
         return 1;
     }
+    return 0;
 }
 void CleanBuffer(void) {
     while (getchar() != '\n');
