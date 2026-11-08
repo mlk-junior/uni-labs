@@ -3,13 +3,16 @@
 #include <string.h>
 #include <time.h>
 
+#define MIN_LINES_COUNT 1
+#define MAX_LINES_COUNT 10
 #define MIN_WORD_LENGTH 1
 #define MAX_WORD_LENGTH 10
+
 
 #define ASCII_BOTTOM 65
 #define ASCII_TOP 126
 
-int ValidateValue(int value, int bottomLimit, int topLimit, char lastSymbol);
+int IsInvalidByLimit(int value, int bottomLimit, int topLimit, char lastSymbol);
 void CleanBuffer(void);
 void GenerateString(char *string, int length);
 void Sort(char **addresses,int num);
@@ -19,20 +22,30 @@ int main(void) {
     srand(time(NULL));
     char err = 0;
 
-    int value;
-    int linesCount = 3;
+    int linesCount;
     int symbCount = 4;
 
     do{
         do{
             printf("Program for sorting lines of symbols\n");
             do {
-                printf("Enter number of lines --> \n");
-                scanf("%d%c",&linesCount, &end);
-                if (ValidateValue(value, MIN_WORD_LENGTH, MAX_WORD_LENGTH, end)) {
+                err = 0;
+                printf("Enter number of lines --> (%d to %d)\n", MIN_LINES_COUNT, MAX_LINES_COUNT);
+                if (!scanf("%d%c",&linesCount, &end) || end != '\n') {
+                    err = 1;
+                    printf("Inputted value must be an integer\n");
+                    printf("\n");
+                    CleanBuffer();
+                    continue;
+                }
+
+                if (IsInvalidByLimit(linesCount, MIN_WORD_LENGTH, MAX_WORD_LENGTH, end) == 1) {
                     err = 1;
                     printf("The value is out of bounds\n");
+                    printf("\n");
+                    if (end != '\n') CleanBuffer();
                 }
+
             }while(err != 0);
 
             char list[linesCount][symbCount+1];
@@ -70,9 +83,13 @@ int main(void) {
     }while(cont != 'e');
     return 0;
 }
-int ValidateValue(int value, int bottomLimit, int topLimit, char lastSymbol) {
-
-    return 1;
+int IsInvalidByLimit(int value, int bottomLimit, int topLimit, char lastSymbol) {
+    if (value < bottomLimit) return 1;
+    if (value > topLimit) return 1;
+    if (lastSymbol != '\n') {
+        CleanBuffer();
+        return 1;
+    }
 }
 void CleanBuffer(void) {
     while (getchar() != '\n');
