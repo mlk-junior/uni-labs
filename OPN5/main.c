@@ -29,7 +29,7 @@ int main(void) {
         do{
             printf("Program for sorting lines of symbols\n");
             do {
-                err = 0;
+                    err = 0;
                 printf("Enter number of lines --> (%d to %d)\n", MIN_LINES_COUNT, MAX_LINES_COUNT);
                 if (!scanf("%d%c",&linesCount, &end) || end != '\n') {
                     err = 1;
@@ -52,13 +52,10 @@ int main(void) {
             char *addr[linesCount];
 
             for (int i = 0; i < linesCount; i++) {
+                GenerateString(list[i], symbCount);
                 addr[i] = list[i];
             }
-
-            for (int i = 0; i < linesCount; i++) {
-                GenerateString(list[i], symbCount);
-
-            }
+            
             for (int i = 0; i < linesCount; i++) {
                 for (int j = 0; j < symbCount; j++) {
                     printf("%c",list[i][j]);
