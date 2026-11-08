@@ -7,7 +7,7 @@
 #define MAX_LINES_COUNT 10
 #define MIN_LINE_LENGTH 1
 #define MAX_LINE_LENGTH 10
-#define ASCII_BOTTOM 32
+#define ASCII_BOTTOM 34
 #define ASCII_TOP 126
 
 int ValueValidation(void);
@@ -20,7 +20,6 @@ void Sort(char **addresses,int num);
 int main(void) {
     char cont,fillingOption,nextSymbol;
     srand(time(NULL));
-
 
     int linesCount;
     int symbCount;
@@ -48,35 +47,33 @@ int main(void) {
         if (fillingOption == '1') {
             for (int i = 0; i < linesCount; i++) {
                 GenerateString(list[i], symbCount);
-                addr[i] = list[i];
             }
         }
         else {
             for (int i = 0; i < linesCount; i++) {
                 printf("Input %d line without spaces -->\n", i+1);
-                if (scanf("%s%c",list[i], &nextSymbol) && nextSymbol == '\n') {
-                    if (strlen(list[i]) == symbCount) {
-                        for (int j = 0; j < symbCount; j++) {
-                            if (list[i][j] < ASCII_BOTTOM || list[i][j] > ASCII_TOP) {
-                                printf("Invalid symbol --> %c\n", list[i][j]);
-                                i--;
-                                break;
-                            }
-                        }
-                    }
-                    else {
-                        printf("Invalid input. Word must be exactly %d symbols long\n", symbCount);
-                        i--;
-                    }
-                }
-                else {
+
+                if (!scanf("%s%c",list[i],&nextSymbol) || nextSymbol != '\n') {
                     printf("Invalid input. Please input a valid string\n");
                     CleanBuffer();
                     i--;
+                    continue;
+                }
+                if (strlen(list[i]) != symbCount) {
+                    printf("Invalid input. Word must be exactly %d symbols long\n", symbCount);
+                    i--;
+                    continue;
+                }
+                for (int j = 0; j < symbCount; j++) {
+                    if (list[i][j] < ASCII_BOTTOM || list[i][j] > ASCII_TOP) {
+                        printf("Invalid symbol --> %c\n", list[i][j]);
+                        i--;
+                        break;
+                    }
                 }
             }
         }
-        
+
         for (int i = 0; i < linesCount; i++) {
             addr[i] = list[i];
         }
