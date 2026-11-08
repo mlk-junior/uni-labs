@@ -25,57 +25,55 @@ int main(void) {
     int symbCount;
 
     do{
-        do{
-            printf("Program for sorting lines of symbols\n");
-            do {
-                printf("Enter number of lines --> (%d to %d)\n", MIN_LINES_COUNT, MAX_LINES_COUNT);
-                linesCount = ValueValidation();
-            }while(linesCount == 0);
+        printf("Program for sorting lines of symbols\n");
+        do {
+            printf("Enter number of lines --> (%d to %d)\n", MIN_LINES_COUNT, MAX_LINES_COUNT);
+            linesCount = ValueValidation();
+        }while(linesCount == 0);
 
-            do {
-                printf("Enter number of symbols in each word --> (%d to %d)\n", MIN_WORD_LENGTH, MAX_WORD_LENGTH);
-                symbCount = ValueValidation();
-            }while(symbCount == 0);
+        do {
+            printf("Enter number of symbols in each word --> (%d to %d)\n", MIN_WORD_LENGTH, MAX_WORD_LENGTH);
+            symbCount = ValueValidation();
+        }while(symbCount == 0);
 
-            char list[linesCount][symbCount+1];
-            char *addr[linesCount];
+        char list[linesCount][symbCount+1];
+        char *addr[linesCount];
+
+        for (int i = 0; i < linesCount; i++) {
+            GenerateString(list[i], symbCount);
+            addr[i] = list[i];
+        }
+
+        if (linesCount == MIN_LINES_COUNT) {
+            printf("%s\n", addr[0]);
+            printf("Only one line in array, nothing to sort\n");
+
+        }
+        else {
 
             for (int i = 0; i < linesCount; i++) {
-                GenerateString(list[i], symbCount);
-                addr[i] = list[i];
+                printf("%s\n",addr[i]);
             }
-            
-            if (linesCount == MIN_LINES_COUNT) {
-                printf("%s\n", addr[0]);
-                printf("Only one line in array, nothing to sort\n");
+            printf("\n");
 
-            }
-            else {
-
-                for (int i = 0; i < linesCount; i++) {
-                    printf("%s\n",addr[i]);
-                }
-                printf("\n");
-
-                Sort(addr,linesCount);
-                printf("Sorted lines\n");
-
-                printf("\n");
-
-                for (int i = 0; i < linesCount; i++) {
-                    printf("%s\n",addr[i]);
-                }
-            }
+            Sort(addr,linesCount);
+            printf("Sorted lines\n");
 
             printf("\n");
 
-            printf("Do you want to continue? (Press ENTER to continue or press 'e' to exit)\n");
-            cont = getchar();
-            if (cont != '\n') {
-                CleanBuffer();
+            for (int i = 0; i < linesCount; i++) {
+                printf("%s\n",addr[i]);
             }
-        }while (cont != '\n' && cont != 'e');
-    }while(cont != 'e');
+        }
+
+        printf("\n");
+
+        printf("Do you want to continue? (Press ENTER to continue or ANY OTHER KEY + ENTER to stop)\n");
+        cont = getchar();
+        if (cont != '\n') {
+            CleanBuffer();
+        }
+    }while(cont == '\n');
     return 0;
 }
 int ValueValidation(void) {
