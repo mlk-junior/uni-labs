@@ -1,62 +1,114 @@
 #include <stdio.h>
-void cleanBuffer(void) {
-    while (getchar() != '\n');
-}
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#define MIN_WORD_LENGTH 1
+#define MAX_WORD_LENGTH 10
+
+#define ASCII_BOTTOM 65
+#define ASCII_TOP 126
+
+int ValidateValue(int value, int bottomLimit, int topLimit, char lastSymbol);
+void CleanBuffer(void);
+void GenerateString(char *string, int length);
+void Sort(char **addresses,int num);
 
 int main(void) {
     char cont,end;
+    srand(time(NULL));
     char err = 0;
 
-    char linesBottomBorder = 1;
-    char linesTopBorder = 10;
-    int linesValue;
+    int value;
+    int linesCount = 3;
+    int symbCount = 4;
 
-    char lettersBottomValue = 1;
-    char lettersTopValue = 10;
-    int lettersValue;
-
-    do
-    {
-        do
-        {
-            printf("Input desired value of lines (1 to 10)-->\n");
-            do
-            {
-                if (!scanf("%d",&linesValue) || linesValue < linesBottomBorder || linesValue > linesTopBorder)
-                {
+    do{
+        do{
+            printf("Program for sorting lines of symbols\n");
+            do {
+                printf("Enter number of lines --> \n");
+                scanf("%d%c",&linesCount, &end);
+                if (ValidateValue(value, MIN_WORD_LENGTH, MAX_WORD_LENGTH, end)) {
                     err = 1;
-                    printf("Incorrect input. Please try again\n");
+                    printf("The value is out of bounds\n");
                 }
-                else err = 0;
-                cleanBuffer();
-            }while (err != 0);
+            }while(err != 0);
 
-            printf("Input desired value of letters in each line (1 to 10)-->\n");
-            do
-            {
-                if (!scanf("%d",&lettersValue) || lettersValue < lettersBottomValue || lettersValue > lettersTopValue)
-                {
-                    err = 1;
-                    printf("Incorrect input. Please try again\n");
+            char list[linesCount][symbCount+1];
+            char *addr[linesCount];
+
+            for (int i = 0; i < linesCount; i++) {
+                addr[i] = list[i];
+            }
+
+            for (int i = 0; i < linesCount; i++) {
+                GenerateString(list[i], symbCount);
+
+            }
+            for (int i = 0; i < linesCount; i++) {
+                for (int j = 0; j < symbCount; j++) {
+                    printf("%c",list[i][j]);
                 }
-                else err = 0;
-                cleanBuffer();
-            }while (err != 0);
-
-            char matrix[linesValue][lettersValue];
-
-
-
-
+                printf("\n");
+            }
+            Sort(addr,linesCount);
+            printf("\n");
+            for (int i = 0; i < linesCount; i++) {
+                printf("%s",addr[i]);
+                printf("\n");
+            }
 
 
 
             printf("Do you want to continue? (Press ENTER to continue or press 'e' to exit)\n");
             cont = getchar();
             if (cont != '\n') {
-                cleanBuffer();
+                CleanBuffer();
             }
-        }while (cont != '\n' || cont != 'e');
+        }while (cont != '\n' && cont != 'e');
     }while(cont != 'e');
     return 0;
 }
+int ValidateValue(int value, int bottomLimit, int topLimit, char lastSymbol) {
+
+    return 1;
+}
+void CleanBuffer(void) {
+    while (getchar() != '\n');
+}
+void GenerateString(char *string, int length) {
+    if (string) {
+        for (int i = 0; i < length; i++) {
+            int key = rand() % (ASCII_TOP - ASCII_BOTTOM + 1);
+            string[i] =  ASCII_BOTTOM + (char)key;
+        }
+        string[length] = '\0';
+    }
+}
+void Sort(char **addresses,int num) {
+    int i,j;
+    for (i = 0; i < num; i++ ) {
+        for (j = i+1; j < num; j++) {
+            if (strcmp(addresses[i],addresses[j]) > 0) {
+                char* temp;
+                temp = addresses[i];
+                addresses[i] = addresses[j];
+                addresses[j] = temp;
+            }
+        }
+    }
+}
+
+// int ValidateValue(int valuesCount, int valueBottomBorder, int valueTopBorder) {
+//     char err = 0;
+//     do{
+//         if (!scanf("%d",&valuesCount) || valuesCount < valueBottomBorder || valuesCount > valueTopBorder){
+//             err = 1;
+//             printf("Incorrect input. Please try again\n");
+//         }
+//         else err = 0;
+//         CleanBuffer();
+//     }while (err != 0);
+//     return value;
+// }
