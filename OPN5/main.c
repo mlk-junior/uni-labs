@@ -5,9 +5,9 @@
 
 #define MIN_LINES_COUNT 1
 #define MAX_LINES_COUNT 10
-#define MIN_WORD_LENGTH 1
-#define MAX_WORD_LENGTH 10
-#define ASCII_BOTTOM 65
+#define MIN_LINE_LENGTH 1
+#define MAX_LINE_LENGTH 10
+#define ASCII_BOTTOM 32
 #define ASCII_TOP 126
 
 int ValueValidation(void);
@@ -18,8 +18,9 @@ void GenerateString(char *string, int length);
 void Sort(char **addresses,int num);
 
 int main(void) {
-    char cont;
+    char cont,fillingOption,nextSymbol;
     srand(time(NULL));
+
 
     int linesCount;
     int symbCount;
@@ -32,22 +33,57 @@ int main(void) {
         }while(linesCount == 0);
 
         do {
-            printf("Enter number of symbols in each word --> (%d to %d)\n", MIN_WORD_LENGTH, MAX_WORD_LENGTH);
+            printf("Enter number of symbols in each line --> (%d to %d)\n", MIN_LINE_LENGTH, MAX_LINE_LENGTH);
             symbCount = ValueValidation();
         }while(symbCount == 0);
 
         char list[linesCount][symbCount+1];
         char *addr[linesCount];
 
+
+        printf("Input 1 to fill lines by random, Input ANY OTHER KEY to fill manually\n");
+        scanf("%c",&fillingOption);
+        CleanBuffer();
+
+        if (fillingOption == '1') {
+            for (int i = 0; i < linesCount; i++) {
+                GenerateString(list[i], symbCount);
+                addr[i] = list[i];
+            }
+        }
+        else {
+            for (int i = 0; i < linesCount; i++) {
+                printf("Input %d line without spaces -->\n", i+1);
+                if (scanf("%s%c",list[i], &nextSymbol) && nextSymbol == '\n') {
+                    if (strlen(list[i]) == symbCount) {
+                        for (int j = 0; j < symbCount; j++) {
+                            if (list[i][j] < ASCII_BOTTOM || list[i][j] > ASCII_TOP) {
+                                printf("Invalid symbol --> %c\n", list[i][j]);
+                                i--;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        printf("Invalid input. Word must be exactly %d symbols long\n", symbCount);
+                        i--;
+                    }
+                }
+                else {
+                    printf("Invalid input. Please input a valid string\n");
+                    CleanBuffer();
+                    i--;
+                }
+            }
+        }
+        
         for (int i = 0; i < linesCount; i++) {
-            GenerateString(list[i], symbCount);
             addr[i] = list[i];
         }
 
         if (linesCount == MIN_LINES_COUNT) {
             printf("%s\n", addr[0]);
             printf("Only one line in array, nothing to sort\n");
-
         }
         else {
 
@@ -87,7 +123,7 @@ int ValueValidation(void) {
         return 0;
     }
 
-    if (IsInvalidByLimit(value, MIN_WORD_LENGTH, MAX_WORD_LENGTH, end) == 1) {
+    if (IsInvalidByLimit(value, MIN_LINE_LENGTH, MAX_LINE_LENGTH, end) == 1) {
         printf("The value is out of bounds\n");
         printf("\n");
         if (end != '\n') CleanBuffer();
