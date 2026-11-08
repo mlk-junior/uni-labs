@@ -7,12 +7,12 @@
 #define MAX_LINES_COUNT 10
 #define MIN_WORD_LENGTH 1
 #define MAX_WORD_LENGTH 10
-
-
 #define ASCII_BOTTOM 65
 #define ASCII_TOP 126
 
+int ValueValidation(void);
 int IsInvalidByLimit(int value, int bottomLimit, int topLimit, char lastSymbol);
+
 void CleanBuffer(void);
 void GenerateString(char *string, int length);
 void Sort(char **addresses,int num);
@@ -20,53 +20,23 @@ void Sort(char **addresses,int num);
 int main(void) {
     char cont,end;
     srand(time(NULL));
-    char err = 0;
 
     int linesCount;
-    int symbCount = 4;
+    int symbCount;
 
     do{
         do{
             printf("Program for sorting lines of symbols\n");
+
             do {
-                err = 0;
                 printf("Enter number of lines --> (%d to %d)\n", MIN_LINES_COUNT, MAX_LINES_COUNT);
-                if (!scanf("%d%c",&linesCount, &end) || end != '\n') {
-                    err = 1;
-                    printf("Inputted value must be an integer\n");
-                    printf("\n");
-                    CleanBuffer();
-                    continue;
-                }
-
-                if (IsInvalidByLimit(linesCount, MIN_WORD_LENGTH, MAX_WORD_LENGTH, end) == 1) {
-                    err = 1;
-                    printf("The value is out of bounds\n");
-                    printf("\n");
-                    if (end != '\n') CleanBuffer();
-                }
-
-            }while(err != 0);
+                linesCount = ValueValidation();
+            }while(linesCount == 0);
 
             do {
-                err = 0;
                 printf("Enter number of symbols in each word --> (%d to %d)\n", MIN_WORD_LENGTH, MAX_WORD_LENGTH);
-                if (!scanf("%d%c",&linesCount, &end) || end != '\n') {
-                    err = 1;
-                    printf("Inputted value must be an integer\n");
-                    printf("\n");
-                    CleanBuffer();
-                    continue;
-                }
-
-                if (IsInvalidByLimit(linesCount, MIN_WORD_LENGTH, MAX_WORD_LENGTH, end) == 1) {
-                    err = 1;
-                    printf("The value is out of bounds\n");
-                    printf("\n");
-                    if (end != '\n') CleanBuffer();
-                }
-
-            }while(err != 0);
+                symbCount = ValueValidation();
+            }while(symbCount == 0);
 
             char list[linesCount][symbCount+1];
             char *addr[linesCount];
@@ -77,13 +47,12 @@ int main(void) {
             }
 
             for (int i = 0; i < linesCount; i++) {
-                // for (int j = 0; j < symbCount; j++) {
-                //     printf("%c",list[i][j]);
-                // }
                 printf("%s\n",addr[i]);
             }
+            
             Sort(addr,linesCount);
             printf("\n");
+
             for (int i = 0; i < linesCount; i++) {
                 printf("%s\n",addr[i]);
             }
@@ -98,6 +67,25 @@ int main(void) {
         }while (cont != '\n' && cont != 'e');
     }while(cont != 'e');
     return 0;
+}
+int ValueValidation(void) {
+    char end;
+    int value;
+
+    if (!scanf("%d%c",&value, &end) || end != '\n') {
+        printf("Inputted value must be an integer\n");
+        printf("\n");
+        CleanBuffer();
+        return 0;
+    }
+
+    if (IsInvalidByLimit(value, MIN_WORD_LENGTH, MAX_WORD_LENGTH, end) == 1) {
+        printf("The value is out of bounds\n");
+        printf("\n");
+        if (end != '\n') CleanBuffer();
+        return 0;
+    }
+    return value;
 }
 int IsInvalidByLimit(int value, int bottomLimit, int topLimit, char lastSymbol) {
     if (value < bottomLimit) return 1;
