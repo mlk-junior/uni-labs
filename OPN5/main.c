@@ -19,6 +19,7 @@ void Sort(char **addresses,int num);
 
 int main(void) {
     char cont,fillingOption,nextSymbol;
+    char err = 0;
     srand(time(NULL));
 
     int linesCount;
@@ -39,39 +40,50 @@ int main(void) {
         char list[linesCount][symbCount+1];
         char *addr[linesCount];
 
-
-        printf("Input 1 to fill lines by random, Input ANY OTHER KEY to fill manually\n");
-        scanf("%c",&fillingOption);
-        CleanBuffer();
-
-        if (fillingOption == '1') {
-            for (int i = 0; i < linesCount; i++) {
-                GenerateString(list[i], symbCount);
+        do {
+            err = 0;
+            printf("Input 1 to fill lines by random, input 2 to fill manually\n");
+            if (!scanf("%c%c",&fillingOption, &nextSymbol) || nextSymbol != '\n' || (fillingOption != '1' && fillingOption != '2')) {
+                printf("Inputted input, try again\n");
+                err = 1;
+                CleanBuffer();
             }
-        }
-        else {
-            for (int i = 0; i < linesCount; i++) {
-                printf("Input %d line -->\n", i+1);
+        }while (err !=0);
 
-                if (!scanf("%[^\n]%c",list[i],&nextSymbol) || nextSymbol != '\n') {
-                    printf("Invalid input. Please input a valid string\n");
-                    CleanBuffer();
-                    i--;
-                    continue;
+        switch (fillingOption) {
+            case '1':
+                for (int i = 0; i < linesCount; i++) {
+                    GenerateString(list[i], symbCount);
                 }
-                if (strlen(list[i]) != symbCount) {
-                    printf("Invalid input. Word must be exactly %d symbols long\n", symbCount);
-                    i--;
-                    continue;
-                }
-                for (int j = 0; j < symbCount; j++) {
-                    if (list[i][j] < ASCII_BOTTOM || list[i][j] > ASCII_TOP) {
-                        printf("Invalid symbol --> %c\n", list[i][j]);
+            break;
+
+            case '2':
+                for (int i = 0; i < linesCount; i++) {
+                    printf("Input %d line -->\n", i+1);
+
+                    if (!scanf("%[^\n]%c",list[i],&nextSymbol) || nextSymbol != '\n') {
+                        printf("Invalid input. Please input a valid string\n");
+                        CleanBuffer();
                         i--;
-                        break;
+                        continue;
+                    }
+                    if (strlen(list[i]) != symbCount) {
+                        printf("Invalid input. Word must be exactly %d symbols long\n", symbCount);
+                        i--;
+                        continue;
+                    }
+                    for (int j = 0; j < symbCount; j++) {
+                        if (list[i][j] < ASCII_BOTTOM || list[i][j] > ASCII_TOP) {
+                            printf("Invalid symbol --> %c\n", list[i][j]);
+                            i--;
+                            break;
+                        }
                     }
                 }
-            }
+            break;
+
+            default:
+            break;
         }
 
         for (int i = 0; i < linesCount; i++) {
