@@ -113,11 +113,17 @@ int main(void) {
 
         printf("\n");
 
-        printf("Do you want to continue? (Press ENTER to continue or ANY OTHER KEY + ENTER to stop)\n");
-        cont = getchar();
-        if (cont != '\n') {
-            CleanBuffer();
-        }
+
+        do {
+            err = 0;
+            printf("Do you want to continue? (Press ENTER to continue or S to stop)\n");
+            cont = getchar();
+            if (cont != '\n' && cont != 'S' && cont != 's') {
+                printf("Invalid input. Try again\n");
+                err = 1;
+                CleanBuffer();
+            }
+        }while(err != 0);
     }while(cont == '\n');
     return 0;
 }
