@@ -7,7 +7,7 @@
 #define MAX_LINES_COUNT 10
 #define MIN_LINE_LENGTH 1
 #define MAX_LINE_LENGTH 10
-#define ASCII_BOTTOM 34
+#define ASCII_BOTTOM 9
 #define ASCII_TOP 126
 
 int ValueValidation(void);
@@ -51,9 +51,9 @@ int main(void) {
         }
         else {
             for (int i = 0; i < linesCount; i++) {
-                printf("Input %d line without spaces -->\n", i+1);
+                printf("Input %d line -->\n", i+1);
 
-                if (!scanf("%s%c",list[i],&nextSymbol) || nextSymbol != '\n') {
+                if (!scanf("%[^\n]%c",list[i],&nextSymbol) || nextSymbol != '\n') {
                     printf("Invalid input. Please input a valid string\n");
                     CleanBuffer();
                     i--;
